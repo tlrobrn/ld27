@@ -10,14 +10,6 @@ Develop off of master
         git checkout -b build
 
 2. modify .gitignore
->.idea/
->.sass-cache/
->node_modules/
->*.iml
->src/
->Gruntfile.js
->package.json
->README.md
 
         grunt make
         git add *
