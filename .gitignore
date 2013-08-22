@@ -2,6 +2,6 @@
 .sass-cache/
 node_modules/
 *.iml
-css/
-js/
-index.html
+src/
+Gruntfile.js
+package.json
