@@ -2,7 +2,3 @@
 .sass-cache/
 node_modules/
 *.iml
-src/
-tmp/
-Gruntfile.js
-package.json
