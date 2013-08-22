@@ -2,6 +2,7 @@
 module.exports = function (grunt) {
     var game_title = 'SETUP',
         src_js = [
+            'src/js/crafty.js',
             'src/js/config.js'
         ],
         src_sass = 'src/sass/main.scss',
@@ -9,7 +10,6 @@ module.exports = function (grunt) {
             'src/jade/index.jade'
         ],
         combined_js = 'tmp/combined.js',
-        crafty_js = 'js/crafty.js',
         prod_js = 'js/src.min.js',
         prod_css = 'css/src.css';
 
@@ -43,7 +43,7 @@ module.exports = function (grunt) {
                     data: {
                         title: game_title,
                         css: [prod_css],
-                        js: [crafty_js, prod_js]
+                        js: [prod_js]
                     }
                 },
                 files: {
@@ -56,7 +56,7 @@ module.exports = function (grunt) {
                     data: {
                         title: game_title,
                         css: [prod_css],
-                        js: [crafty_js].concat(src_js)
+                        js: src_js
                     }
                 },
                 files: {

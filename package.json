@@ -8,6 +8,6 @@
     "grunt-contrib-uglify": "latest",
     "grunt-contrib-jade": "latest",
     "grunt-contrib-sass": "latest",
-    "grunt-contrib-clean": "latest"
+    "grunt-contrib-clean": "latest",
   }
 }
