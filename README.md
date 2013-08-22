@@ -26,3 +26,5 @@ Develop off of master
         git add *
         git commit -m "version"
         git push origin gh-pages
+        git branch -D build
+        git checkout master
