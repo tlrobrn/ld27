@@ -1,4 +1,8 @@
-#Ludum Dare test scaffolding
+#Ludum Dare
+
+Scaffolding for using Github to host js/html5 game.
+Uses grunt.js to build the final page from src.
+Keeps master free from generated files and gh-pages free from src files.
 
 ##Workflow
 
