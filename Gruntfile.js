@@ -2,8 +2,11 @@
 module.exports = function (grunt) {
     var game_title = 'shift',
         src_js = [
-            'src/js/crafty.js',
+            'src/js/lib/crafty.js',
+            'src/js/lib/create_mocks_module.js',
+            'src/js/lib/tiledmapbuilder.js',
             'src/js/config.js',
+            'src/js/levels.js',
             'src/js/components.js',
             'src/js/scenes.js'
         ],
@@ -70,7 +73,7 @@ module.exports = function (grunt) {
             dist: {
                 files: [
                     {expand: true, cwd: 'src/audio/', src: ['**'], dest: 'assets/audio'},
-                    {expand: true, cwd: 'src/images/', src: ['**'], dest: 'assets/images'}
+                    {expand: true, cwd: 'src/images/', src: ['*.png'], dest: 'assets/images'}
                 ]
             }
         },
