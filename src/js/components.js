@@ -1,35 +1,68 @@
 (function () {
     'use strict';
-    Crafty.c('Timer', {
+    Crafty.c('Movement', {
         init: function () {
-            return this;
-        },
-        start: function (duration) {
-            if (this._begin === undefined) {
-                this._duration = duration * 1000;
-                this._begin = Date.now();
-                this._to = setTimeout(this.stop, this._duration, this);
-            }
-            else {
-                this._duration -= (this._pause_start - this._begin);
-                this._to = setTimeout(this.stop, this._duration, this);
-            }
-            return this;
-        },
-        pause: function () {
-            if (this._begin !== undefined) {
-                clearTimeout(this._to);
-                this._pause_start = Date.now();
-            }
-            return this;
-        },
-        stop: function (that) {
-            Crafty.trigger('Alarm');
-            return that.cancel();
-        },
-        cancel: function () {
-            delete this._begin;
-            return this;
+            this.requires('Twoway, Gravity')
+                .gravity('Floor');
         }
     });
+
+    Crafty.c('Actor', {
+        init: function () {
+            this.requires('2D, Canvas, SpriteAnimation, Collision');
+        }
+    });
+
+    Crafty.c('Player', {
+        init: function () {
+            var animation_speed = 4;
+            this.requires('Actor, Movement, PlayerSprite')
+                .twoway(4, 8)
+                .animate('walk_left', 0, 0, 3)
+                .animate('walk_right', 0, 1, 3)
+                .collision()
+                .onHit('Platform', this._onHitPlatform)
+                .bind('NewDirection', function (data) {
+                    if (data.x < 0) {
+                        this.animate('walk_left', animation_speed, -1);
+                    }
+                    else if (data.x > 0) {
+                        this.animate('walk_right', animation_speed, -1);
+                    }
+                    else {
+                        this.stop();
+                    }
+                });
+        },
+
+        _onHitPlatform: function (objs) {
+            var solid;
+
+            for (var i = objs.length; i--;) {
+                solid = objs[i];
+                if (solid.normal.y !== 0) {
+                    this._up = false;
+                    if (solid.normal.y < 0) {
+                        this._falling = false;
+                        this.y = solid.obj.y - this.h;
+                    }
+                }
+                if (solid.normal.x !== 0) {
+                    this._falling = true;
+                    if (solid.normal.x === 1) {
+                        this.x = solid.obj.x + solid.obj.w;
+                    }
+                    else {
+                        this.x = solid.obj.x - this.w;
+                    }
+                }
+            }
+        }
+    });
+
+    Crafty.c('Platform', {
+        init: function () {
+            this.requires('Collision').collision();
+        }
+    })
 })();
