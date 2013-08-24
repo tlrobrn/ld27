@@ -11,7 +11,6 @@
                 this._to = setTimeout(this.stop, this._duration, this);
             }
             else {
-                console.log('a');
                 this._duration -= (this._pause_start - this._begin);
                 this._to = setTimeout(this.stop, this._duration, this);
             }
