@@ -15,6 +15,13 @@
         ],
         // Success
         function () {
+            Crafty.audio.add({
+                shift: [
+                    'assets/audio/shift.ogg',
+                    'assets/audio/shift.mp3',
+                    'assets/audio/shift.wav'
+                ]
+            });
             Crafty.scene('Title');
         },
         // Progress
@@ -31,6 +38,7 @@
         var timer, action, duration;
         duration = 10;
         action = function () {
+            Crafty.audio.play('shift');
             Crafty.background('#' + Math.floor(Math.random() * 16777215).toString(16));
             timer.cancel().start(duration);
         };
