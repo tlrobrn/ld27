@@ -1,9 +1,11 @@
 'use strict';
 module.exports = function (grunt) {
-    var game_title = 'SETUP',
+    var game_title = 'shift',
         src_js = [
             'src/js/crafty.js',
-            'src/js/config.js'
+            'src/js/config.js',
+            'src/js/components.js',
+            'src/js/scenes.js'
         ],
         src_sass = 'src/sass/main.scss',
         src_jade = [
@@ -64,6 +66,14 @@ module.exports = function (grunt) {
                 }
             }
         },
+        copy: {
+            dist: {
+                files: [
+                    {expand: true, cwd: 'src/audio/', src: ['**'], dest: 'assets/audio'},
+                    {expand: true, cwd: 'src/images/', src: ['**'], dest: 'assets/images'}
+                ]
+            }
+        },
         clean: ['tmp']
     });
 
@@ -71,8 +81,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-jade');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
 
-    grunt.registerTask('default', ['sass', 'jade:debug']);
-    grunt.registerTask('make', ['concat', 'uglify', 'sass', 'jade:dist', 'clean']);
+    grunt.registerTask('default', ['sass', 'jade:debug', 'copy']);
+    grunt.registerTask('make', ['concat', 'uglify', 'sass', 'jade:dist', 'copy', 'clean']);
 };
