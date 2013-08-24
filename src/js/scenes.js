@@ -28,7 +28,15 @@
     });
 
     Crafty.scene('Title', function () {
-        Crafty.background('#FF00FF');
+        var timer, action, duration;
+        duration = 10;
+        action = function () {
+            Crafty.background('#' + Math.floor(Math.random() * 16777215).toString(16));
+            timer.cancel().start(duration);
+        };
+        Crafty.bind('Alarm', action);
+        timer = Crafty.e('Timer')
+            .start(duration);
     });
 
 })();
