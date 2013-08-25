@@ -3,7 +3,7 @@
     Crafty.c('Movement', {
         init: function () {
             this.requires('Twoway, Gravity')
-                .gravity('Floor');
+                .gravity();
         }
     });
 
