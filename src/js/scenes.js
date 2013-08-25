@@ -44,7 +44,9 @@
     });
 
     Crafty.scene('Title', function () {
-        var player, states = [];
+        var player,
+            recall,
+            states = [];
 
         Crafty.e('2D, Canvas, TiledMapBuilder').setMapDataSource(Crafty.asset('levels').test)
             .createWorld(function (map) {
@@ -62,7 +64,7 @@
             .attr({x: 32, y: 0})
             .gravity('Platform');
 
-        player = Crafty.e('Player').onHit('Enemy', function (objs) {
+        recall = function (objs) {
             var pre = states.length - 11;
             if (pre >= 0) {
                 states.length = pre + 1;
@@ -72,7 +74,12 @@
             else {
                 Crafty.scene('Lose');
             }
-        });
+        };
+
+        player = Crafty.e('Player')
+            .onHit('Enemy', recall)
+            .onHit('Death', recall);
+
         Crafty.viewport.follow(player, -game.tile_width, 0);
         states.push(player.pos());
         setInterval(function () {
