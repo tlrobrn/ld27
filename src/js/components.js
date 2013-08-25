@@ -15,32 +15,39 @@
 
     Crafty.c('Player', {
         init: function () {
-            var animation_speed = 4;
-            this.requires('Actor, Movement, PlayerSprite')
+            this.requires('Actor, Movement, Keyboard')
                 .twoway(4, 8)
                 .collision()
-                .onHit('Platform', this._onHitPlatform);
+                .onHit('Platform', this._onHitPlatform)
+                .onHit('Exit', function () {
+                    Crafty.scene('Level');
+                })
+                .bind('KeyDown', function () {
+                    if (this.isDown('W') || this.isDown('UP_ARROW')) {
+                        Crafty.audio.play('jump', 0.5);
+                    }
+                });
         },
 
         _onHitPlatform: function (objs) {
-            var solid;
+            var platform;
 
             for (var i = objs.length; i--;) {
-                solid = objs[i];
-                if (solid.normal.y !== 0) {
+                platform = objs[i];
+                if (platform.normal.y !== 0) {
                     this._up = false;
-                    if (solid.normal.y < 0) {
+                    if (platform.normal.y < 0) {
                         this._falling = false;
-                        this.y = solid.obj.y - this.h;
+                        this.y = platform.obj.y - this.h;
                     }
                 }
-                if (solid.normal.x !== 0) {
+                if (platform.normal.x !== 0) {
                     this._falling = true;
-                    if (solid.normal.x === 1) {
-                        this.x = solid.obj.x + solid.obj.w;
+                    if (platform.normal.x === 1) {
+                        this.x = platform.obj.x + platform.obj.w;
                     }
                     else {
-                        this.x = solid.obj.x - this.w;
+                        this.x = platform.obj.x - this.w;
                     }
                 }
             }
@@ -55,21 +62,40 @@
 
     Crafty.c('Enemy', {
         init: function () {
+            this._direction = Crafty.math.randomElementOfArray([true, false]) ? -1 : 1;
             this.requires('Actor, Gravity')
                 .collision()
-                .gravity('Platform');
+                .gravity('Platform')
+                .onHit('Death', function () {
+                    this.destroy();
+                });
         }
     });
 
     Crafty.c('Red', {
         init: function () {
-            this.requires('Enemy, RedSprite');
+            var speed = 1;
+            this.requires('Enemy')
+                .onHit('Solid', function (objs) {
+                    this._direction *= -1;
+                })
+                .bind('EnterFrame', function () {
+                    this.x += speed * this._direction;
+                });
         }
     });
 
     Crafty.c('Purple', {
         init: function () {
-            this.requires('Enemy, PurpleSprite');
+            var speed = 1;
+            this.requires('Enemy')
+                .onHit('Solid', function (objs) {
+                    this._direction *= -1;
+                })
+                .bind('EnterFrame', function () {
+                    this.y -= 2;
+                    this.x += speed * this._direction;
+                });
         }
     })
 })();
