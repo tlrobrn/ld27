@@ -14,8 +14,7 @@
             'assets/audio/shift.mp3',
             'assets/audio/shift.wav',
             // Images
-            'assets/images/player.png',
-            'assets/images/generic_platformer_tiles.png'
+            'assets/images/Sprites.png',
         ],
             // Success
             function () {
@@ -27,8 +26,10 @@
                     ]
                 });
 
-                Crafty.sprite(32, 'assets/images/player.png', {
-                    PlayerSprite: [0, 0]
+                Crafty.sprite(32, 'assets/images/Sprites.png', {
+                    PlayerSprite: [0, 0],
+                    RedSprite: [1, 0],
+                    PurpleSprite: [2, 0]
                 });
 
                 Crafty.scene('Title');
@@ -57,11 +58,6 @@
                 }
             });
 
-        Crafty.e('Actor, Enemy, Gravity, PlayerSprite')
-            .collision()
-            .attr({x: 32, y: 0})
-            .gravity('Platform');
-
         recall = function (objs) {
             var pre = states.length - 11;
             if (pre >= 0) {
@@ -74,9 +70,8 @@
             }
         };
 
-        player = Crafty.e('Player')
-            .onHit('Enemy', recall)
-            .onHit('Death', recall);
+        player = Crafty('Player');
+        player.onHit('Enemy', recall).onHit('Death', recall);
 
         Crafty.viewport.follow(player, -game.tile_width, 0);
         states.push(player.pos());
@@ -89,7 +84,7 @@
         var e = Crafty.e('2D, Canvas, Text')
             .attr({x: game.width / 2, y: game.height / 2, w: game.width})
             .text('You Lose')
-            .textColor('#FFFFFF', 1.0);
+            .textColor('#000000', 1.0);
         Crafty.viewport.follow(e, 0, 0);
     });
 })();

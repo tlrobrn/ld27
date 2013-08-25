@@ -9,7 +9,7 @@
 
     Crafty.c('Actor', {
         init: function () {
-            this.requires('2D, Canvas, SpriteAnimation, Collision');
+            this.requires('2D, Canvas, Collision');
         }
     });
 
@@ -18,21 +18,8 @@
             var animation_speed = 4;
             this.requires('Actor, Movement, PlayerSprite')
                 .twoway(4, 8)
-                .animate('walk_left', 0, 0, 3)
-                .animate('walk_right', 0, 1, 3)
                 .collision()
-                .onHit('Platform', this._onHitPlatform)
-                .bind('NewDirection', function (data) {
-                    if (data.x < 0) {
-                        this.animate('walk_left', animation_speed, -1);
-                    }
-                    else if (data.x > 0) {
-                        this.animate('walk_right', animation_speed, -1);
-                    }
-                    else {
-                        this.stop();
-                    }
-                });
+                .onHit('Platform', this._onHitPlatform);
         },
 
         _onHitPlatform: function (objs) {
@@ -63,6 +50,26 @@
     Crafty.c('Platform', {
         init: function () {
             this.requires('Collision').collision();
+        }
+    });
+
+    Crafty.c('Enemy', {
+        init: function () {
+            this.requires('Actor, Gravity')
+                .collision()
+                .gravity('Platform');
+        }
+    });
+
+    Crafty.c('Red', {
+        init: function () {
+            this.requires('Enemy, RedSprite');
+        }
+    });
+
+    Crafty.c('Purple', {
+        init: function () {
+            this.requires('Enemy, PurpleSprite');
         }
     })
 })();
