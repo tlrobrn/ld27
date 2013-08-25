@@ -13,6 +13,9 @@
             'assets/audio/shift.ogg',
             'assets/audio/shift.mp3',
             'assets/audio/shift.wav',
+            'assets/audio/jump.ogg',
+            'assets/audio/jump.mp3',
+            'assets/audio/jump.wav',
             // Images
             'assets/images/Sprites.png',
         ],
@@ -23,16 +26,15 @@
                         'assets/audio/shift.ogg',
                         'assets/audio/shift.mp3',
                         'assets/audio/shift.wav'
+                    ],
+                    jump: [
+                        'assets/audio/jump.ogg',
+                        'assets/audio/jump.mp3',
+                        'assets/audio/jump.wav'
                     ]
                 });
 
-                Crafty.sprite(32, 'assets/images/Sprites.png', {
-                    PlayerSprite: [0, 0],
-                    RedSprite: [1, 0],
-                    PurpleSprite: [2, 0]
-                });
-
-                Crafty.scene('Title');
+                Crafty.scene('Level');
             },
             // Progress
             function (e) {
@@ -44,13 +46,18 @@
             });
     });
 
-    Crafty.scene('Title', function () {
-        var player,
+    Crafty.scene('Level', function () {
+        var level = Crafty.asset('levels').shift(),
+            player,
             recall,
             states = [];
 
+        if (level === undefined) {
+            Crafty.scene('End');
+        }
+
         Crafty.background('#FFFFFF');
-        Crafty.e('2D, Canvas, TiledMapBuilder').setMapDataSource(Crafty.asset('levels')[0])
+        Crafty.e('2D, Canvas, TiledMapBuilder').setMapDataSource(level)
             .createWorld(function (map) {
                 var solids = map.getEntitiesInLayer('Solid');
                 for (var i = solids.length; i--;) {
@@ -71,7 +78,21 @@
         };
 
         player = Crafty('Player');
-        player.onHit('Enemy', recall).onHit('Death', recall);
+        player.onHit('Death', recall)
+            .onHit('Enemy', function (objs) {
+                var i, enemy;
+                for (i = objs.length; i--;) {
+                    enemy = objs[i];
+                    if (enemy.normal.y !== 0) {
+                        enemy.obj.destroy();
+                        this._falling = false;
+                        this.trigger('KeyDown', 'W');
+                    }
+                    else {
+                        recall(objs);
+                    }
+                }
+            });
 
         Crafty.viewport.follow(player, -game.tile_width, 0);
         states.push(player.pos());
@@ -84,6 +105,14 @@
         var e = Crafty.e('2D, Canvas, Text')
             .attr({x: game.width / 2, y: game.height / 2, w: game.width})
             .text('You Lose')
+            .textColor('#000000', 1.0);
+        Crafty.viewport.follow(e, 0, 0);
+    });
+
+    Crafty.scene('End', function () {
+        var e = Crafty.e('2D, Canvas, Text')
+            .attr({x: game.width / 2, y: game.height / 2, w: game.width})
+            .text('You Win')
             .textColor('#000000', 1.0);
         Crafty.viewport.follow(e, 0, 0);
     });
