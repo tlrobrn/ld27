@@ -44,6 +44,8 @@
     });
 
     Crafty.scene('Title', function () {
+        var player, states = [];
+
         Crafty.e('2D, Canvas, TiledMapBuilder').setMapDataSource(Crafty.asset('levels').test)
             .createWorld(function (map) {
                 var solids = map.getEntitiesInLayer('Solid'),
@@ -55,7 +57,34 @@
                 }
             });
 
-        Crafty.e('Player');
+        Crafty.e('Actor, Enemy, Gravity, PlayerSprite')
+            .collision()
+            .attr({x: 32, y: 0})
+            .gravity('Platform');
+
+        player = Crafty.e('Player').onHit('Enemy', function (objs) {
+            var pre = states.length - 11;
+            if (pre >= 0) {
+                states.length = pre + 1;
+                player.y = states[pre]._y;
+                player.x = states[pre]._x;
+            }
+            else {
+                Crafty.scene('Lose');
+            }
+        });
+        Crafty.viewport.follow(player, -game.tile_width, 0);
+        states.push(player.pos());
+        setInterval(function () {
+            states.push(player.pos());
+        }, 1000);
     });
 
+    Crafty.scene('Lose', function () {
+        var e = Crafty.e('2D, Canvas, Text')
+            .attr({x: game.width / 2, y: game.height / 2, w: game.width})
+            .text('You Lose')
+            .textColor('#FFFFFF', 1.0);
+        Crafty.viewport.follow(e, 0, 0);
+    });
 })();
