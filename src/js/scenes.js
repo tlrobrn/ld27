@@ -48,12 +48,10 @@
             recall,
             states = [];
 
-        Crafty.e('2D, Canvas, TiledMapBuilder').setMapDataSource(Crafty.asset('levels').test)
+        Crafty.background('#FFFFFF');
+        Crafty.e('2D, Canvas, TiledMapBuilder').setMapDataSource(Crafty.asset('levels')[0])
             .createWorld(function (map) {
-                var solids = map.getEntitiesInLayer('Solid'),
-                    deaths = map.getEntitiesInLayer('Death'),
-                    bg = map.getEntitiesInLayer('Background');
-
+                var solids = map.getEntitiesInLayer('Solid');
                 for (var i = solids.length; i--;) {
                     solids[i].addComponent('Platform');
                 }
